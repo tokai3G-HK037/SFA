@@ -1,0 +1,195 @@
+// SFM(案件管理・見積書・売上仕入データ出力)データモデル
+// learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ── 案件管理 ─────────────────────────────
+
+enum ProjectStatus {
+  ESTIMATING // 見積中
+  ORDERED // 受注
+  LOST // 失注
+  COMPLETED // 完了
+}
+
+model Project {
+  id           String        @id @default(uuid())
+  customerName String // 顧客名
+  projectName String // 案件名
+  assignee     String? // 担当者
+  status       ProjectStatus @default(ESTIMATING)
+  amount       Decimal       @default(0) @db.Decimal(14, 2) // 想定金額
+  dueDate      DateTime?     @db.Date // 期限
+  notes        String? // 備考
+  isDeleted    Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  estimates     Estimate[]
+  purchaseItems PurchaseItem[]
+
+  @@index([customerName])
+  @@index([status])
+  @@index([assignee])
+  @@index([dueDate])
+  @@index([isDeleted])
+}
+
+// 仕入明細: 1案件に対して複数の仕入先・品目を登録できる
+model PurchaseItem {
+  id           String   @id @default(uuid())
+  projectId    String
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sortOrder    Int      @default(0)
+  supplierName String // 仕入先
+  itemName     String // 品目
+  quantity     Decimal  @default(1) @db.Decimal(12, 2)
+  unit         String?
+  unitPrice    Decimal  @default(0) @db.Decimal(14, 2)
+  amount       Decimal  @default(0) @db.Decimal(14, 2) // quantity × unitPrice(保存値)
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+// ── 見積書 ─────────────────────────────
+
+enum TaxType {
+  EXCLUSIVE // 外税
+  INCLUSIVE // 内税
+}
+
+enum EstimateStatus {
+  DRAFT // 下書き
+  FINALIZED // 確定
+}
+
+// 自社情報(シングルトン。id="default"固定の1行のみ使用)
+model CompanyProfile {
+  id           String   @id @default("default")
+  companyName  String   @default("")
+  postalCode   String?
+  address      String?
+  phone        String?
+  contactName  String?
+  updatedAt    DateTime @updatedAt
+}
+
+model Estimate {
+  id             String         @id @default(uuid())
+  projectId      String
+  project        Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  estimateNumber String         @unique // 例: Q-2026-0001
+  title          String // 件名
+  addressee      String // 宛先
+  issuerName     String // 発行者情報(発行時点の自社情報をコピー)
+  issuerAddress  String?
+  issuerContact  String?
+  issueDate      DateTime       @db.Date
+  validUntil     DateTime?      @db.Date
+  taxRate        Decimal        @default(10) @db.Decimal(5, 2) // 発行時点の税率をスナップショット保存
+  taxType        TaxType        @default(EXCLUSIVE)
+  subtotal       Decimal        @default(0) @db.Decimal(14, 2)
+  taxAmount      Decimal        @default(0) @db.Decimal(14, 2)
+  totalAmount    Decimal        @default(0) @db.Decimal(14, 2)
+  status         EstimateStatus @default(DRAFT)
+  notes          String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  items EstimateItem[]
+
+  @@index([projectId])
+  @@index([issueDate])
+  @@index([status])
+}
+
+model EstimateItem {
+  id         String   @id @default(uuid())
+  estimateId String
+  estimate   Estimate @relation(fields: [estimateId], references: [id], onDelete: Cascade)
+  sortOrder  Int      @default(0)
+  name       String // 品名
+  quantity   Decimal  @default(1) @db.Decimal(12, 2)
+  unit       String?
+  unitPrice  Decimal  @default(0) @db.Decimal(14, 2)
+  amount     Decimal  @default(0) @db.Decimal(14, 2) // quantity × unitPrice(保存値)
+  notes      String?
+
+  @@index([estimateId])
+}
+
+// ── 売上/仕入データ出力 ─────────────────────────────
+
+enum ExportType {
+  SALES // 売上
+  PURCHASE // 仕入
+}
+
+enum FileFormat {
+  CSV
+  XLSX
+}
+
+enum Encoding {
+  UTF8
+  SHIFT_JIS
+}
+
+enum ColumnFormatType {
+  TEXT
+  DATE
+  NUMBER
+}
+
+model ExportTemplate {
+  id           String         @id @default(uuid())
+  name         String // 例: 「販売管理システム 売上取込用」
+  exportType   ExportType
+  fileFormat   FileFormat     @default(CSV)
+  encoding     Encoding       @default(UTF8) // CSVのみ有効
+  delimiter    String         @default(",") // CSVのみ有効
+  hasHeaderRow Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  columns ExportTemplateColumn[]
+  history ExportHistory[]
+
+  @@index([exportType])
+}
+
+model ExportTemplateColumn {
+  id               String            @id @default(uuid())
+  exportTemplateId String
+  exportTemplate   ExportTemplate    @relation(fields: [exportTemplateId], references: [id], onDelete: Cascade)
+  columnOrder      Int               @default(0)
+  headerLabel      String // 出力ヘッダー文字列
+  sourceField      String? // 例: project.customerName / estimate.totalAmount / purchaseItem.amount
+  fixedValue       String? // 固定値を出力する場合
+  formatType       ColumnFormatType? // 日付形式・数値桁数などの表示フォーマット
+
+  @@index([exportTemplateId])
+}
+
+// 出力履歴(取り込みトラブル時の追跡用)
+model ExportHistory {
+  id               String         @id @default(uuid())
+  exportTemplateId String
+  exportTemplate   ExportTemplate @relation(fields: [exportTemplateId], references: [id])
+  executedAt       DateTime       @default(now())
+  periodFrom       DateTime?      @db.Date
+  periodTo         DateTime?      @db.Date
+  recordCount      Int            @default(0)
+
+  @@index([exportTemplateId])
+}
