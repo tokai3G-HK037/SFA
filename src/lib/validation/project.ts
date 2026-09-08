@@ -20,8 +20,13 @@ export const projectInputSchema = z.object({
   assignee: z.string().trim().max(100).optional().or(z.literal("")),
   status: z.enum(projectStatusValues),
   amount: z.coerce.number().min(0, "0以上を入力してください"),
-  dueDate: z.string().optional().or(z.literal("")), // "YYYY-MM-DD"
+  expectedDeliveryDate: z.string().optional().or(z.literal("")), // "YYYY-MM-DD" 予定納期
   notes: z.string().max(2000).optional().or(z.literal("")),
+  // エンドユーザー(納品先の最終顧客)情報
+  endUserName: z.string().trim().max(200).optional().or(z.literal("")),
+  endUserContactPerson: z.string().trim().max(100).optional().or(z.literal("")),
+  endUserAddress: z.string().trim().max(300).optional().or(z.literal("")),
+  endUserContact: z.string().trim().max(200).optional().or(z.literal("")),
 });
 
 export type ProjectInput = z.infer<typeof projectInputSchema>;
@@ -32,7 +37,8 @@ export type ProjectFormInput = z.input<typeof projectInputSchema>;
 export const purchaseItemInputSchema = z.object({
   supplierName: z.string().trim().min(1, "仕入先を入力してください").max(200),
   itemName: z.string().trim().min(1, "品目を入力してください").max(200),
-  quantity: z.coerce.number().min(0, "0以上を入力してください"),
+  // 値引き行を入力できるよう数量はマイナスも許容する
+  quantity: z.coerce.number(),
   unit: z.string().trim().max(30).optional().or(z.literal("")),
   unitPrice: z.coerce.number().min(0, "0以上を入力してください"),
   notes: z.string().max(1000).optional().or(z.literal("")),

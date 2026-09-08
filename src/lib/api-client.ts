@@ -11,8 +11,12 @@ export type ProjectDto = {
   assignee: string | null;
   status: ProjectStatus;
   amount: string;
-  dueDate: string | null;
+  expectedDeliveryDate: string | null;
   notes: string | null;
+  endUserName: string | null;
+  endUserContactPerson: string | null;
+  endUserAddress: string | null;
+  endUserContact: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -38,7 +42,7 @@ export type ProjectDetailDto = ProjectDto & {
     title: string;
     issueDate: string;
     totalAmount: string;
-    status: string;
+    status: EstimateStatus;
   }>;
 };
 
@@ -177,6 +181,31 @@ export function deletePurchaseItemRequest(projectId: string, itemId: string) {
   return request<{ ok: true }>(`/api/projects/${projectId}/purchase-items/${itemId}`, {
     method: "DELETE",
   });
+}
+
+export type PurchaseItemImportRowError = { row: number; message: string };
+export type PurchaseItemImportError = Error & { rowErrors?: PurchaseItemImportRowError[] };
+
+export async function importPurchaseItemsRequest(
+  projectId: string,
+  file: File,
+  encoding: "utf8" | "shift_jis",
+) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("encoding", encoding);
+
+  const res = await fetch(`/api/projects/${projectId}/purchase-items/import`, {
+    method: "POST",
+    body: formData,
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const error: PurchaseItemImportError = new Error(body.error ?? "取り込みに失敗しました");
+    error.rowErrors = body.rowErrors;
+    throw error;
+  }
+  return body as { imported: number };
 }
 
 // ── 見積書 ─────────────────────────────

@@ -55,7 +55,7 @@ export default function ProjectsPage() {
 
       <div className="flex flex-wrap gap-3">
         <Input
-          placeholder="顧客名・案件名で検索"
+          placeholder="顧客名・エンドユーザー名・案件名で検索"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="max-w-xs"
@@ -86,11 +86,11 @@ export default function ProjectsPage() {
           <TableHeader>
             <TableRow>
               <TableHead>顧客名</TableHead>
-              <TableHead>案件名</TableHead>
+              <TableHead>エンドユーザー・案件名</TableHead>
               <TableHead>担当者</TableHead>
               <TableHead>ステータス</TableHead>
               <TableHead className="text-right">金額</TableHead>
-              <TableHead>期限</TableHead>
+              <TableHead>予定納期</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -124,6 +124,11 @@ export default function ProjectsPage() {
                 </TableCell>
                 <TableCell>
                   <Link href={`/projects/${project.id}`} className="block">
+                    {project.endUserName && (
+                      <span className="block text-xs text-muted-foreground">
+                        {project.endUserName}
+                      </span>
+                    )}
                     {project.projectName}
                   </Link>
                 </TableCell>
@@ -136,7 +141,7 @@ export default function ProjectsPage() {
                 <TableCell className="text-right">
                   {Number(project.amount).toLocaleString()}円
                 </TableCell>
-                <TableCell>{project.dueDate?.slice(0, 10) ?? "-"}</TableCell>
+                <TableCell>{project.expectedDeliveryDate?.slice(0, 10) ?? "-"}</TableCell>
               </TableRow>
             ))}
           </TableBody>

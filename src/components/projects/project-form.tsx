@@ -35,8 +35,14 @@ function toFormDefaults(project?: ProjectDto): ProjectFormInput {
     assignee: project?.assignee ?? "",
     status: project?.status ?? "ESTIMATING",
     amount: project ? Number(project.amount) : 0,
-    dueDate: project?.dueDate ? project.dueDate.slice(0, 10) : "",
+    expectedDeliveryDate: project?.expectedDeliveryDate
+      ? project.expectedDeliveryDate.slice(0, 10)
+      : "",
     notes: project?.notes ?? "",
+    endUserName: project?.endUserName ?? "",
+    endUserContactPerson: project?.endUserContactPerson ?? "",
+    endUserAddress: project?.endUserAddress ?? "",
+    endUserContact: project?.endUserContact ?? "",
   };
 }
 
@@ -127,15 +133,39 @@ export function ProjectForm({ project }: { project?: ProjectDto }) {
         </Field>
 
         <Field orientation="responsive">
-          <FieldLabel htmlFor="dueDate">期限</FieldLabel>
-          <Input id="dueDate" type="date" {...register("dueDate")} />
-          <FieldError errors={[errors.dueDate]} />
+          <FieldLabel htmlFor="expectedDeliveryDate">予定納期</FieldLabel>
+          <Input id="expectedDeliveryDate" type="date" {...register("expectedDeliveryDate")} />
+          <FieldError errors={[errors.expectedDeliveryDate]} />
         </Field>
 
         <Field>
           <FieldLabel htmlFor="notes">備考</FieldLabel>
           <Textarea id="notes" rows={4} {...register("notes")} />
           <FieldError errors={[errors.notes]} />
+        </Field>
+      </FieldGroup>
+
+      <FieldGroup>
+        <h2 className="text-lg font-semibold">エンドユーザー情報</h2>
+        <Field orientation="responsive">
+          <FieldLabel htmlFor="endUserName">名称</FieldLabel>
+          <Input id="endUserName" {...register("endUserName")} />
+          <FieldError errors={[errors.endUserName]} />
+        </Field>
+        <Field orientation="responsive">
+          <FieldLabel htmlFor="endUserContactPerson">担当者</FieldLabel>
+          <Input id="endUserContactPerson" {...register("endUserContactPerson")} />
+          <FieldError errors={[errors.endUserContactPerson]} />
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="endUserAddress">住所</FieldLabel>
+          <Input id="endUserAddress" {...register("endUserAddress")} />
+          <FieldError errors={[errors.endUserAddress]} />
+        </Field>
+        <Field orientation="responsive">
+          <FieldLabel htmlFor="endUserContact">連絡先</FieldLabel>
+          <Input id="endUserContact" {...register("endUserContact")} />
+          <FieldError errors={[errors.endUserContact]} />
         </Field>
       </FieldGroup>
 

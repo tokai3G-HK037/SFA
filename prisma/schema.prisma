@@ -20,17 +20,23 @@ enum ProjectStatus {
 }
 
 model Project {
-  id           String        @id @default(uuid())
-  customerName String // 顧客名
-  projectName String // 案件名
-  assignee     String? // 担当者
-  status       ProjectStatus @default(ESTIMATING)
-  amount       Decimal       @default(0) @db.Decimal(14, 2) // 想定金額
-  dueDate      DateTime?     @db.Date // 期限
-  notes        String? // 備考
-  isDeleted    Boolean       @default(false)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id                   String        @id @default(uuid())
+  customerName         String // 顧客名
+  projectName          String // 案件名
+  assignee             String? // 担当者(社内)
+  status               ProjectStatus @default(ESTIMATING)
+  amount               Decimal       @default(0) @db.Decimal(14, 2) // 想定金額
+  expectedDeliveryDate DateTime?     @db.Date // 予定納期
+  notes                String? // 備考
+  isDeleted            Boolean       @default(false)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  // エンドユーザー(納品先の最終顧客)情報
+  endUserName          String? // エンドユーザー名称
+  endUserContactPerson String? // エンドユーザー担当者
+  endUserAddress       String? // エンドユーザー住所
+  endUserContact       String? // エンドユーザー連絡先
 
   estimates     Estimate[]
   purchaseItems PurchaseItem[]
@@ -38,7 +44,7 @@ model Project {
   @@index([customerName])
   @@index([status])
   @@index([assignee])
-  @@index([dueDate])
+  @@index([expectedDeliveryDate])
   @@index([isDeleted])
 }
 
@@ -75,13 +81,13 @@ enum EstimateStatus {
 
 // 自社情報(シングルトン。id="default"固定の1行のみ使用)
 model CompanyProfile {
-  id           String   @id @default("default")
-  companyName  String   @default("")
-  postalCode   String?
-  address      String?
-  phone        String?
-  contactName  String?
-  updatedAt    DateTime @updatedAt
+  id          String   @id @default("default")
+  companyName String   @default("")
+  postalCode  String?
+  address     String?
+  phone       String?
+  contactName String?
+  updatedAt   DateTime @updatedAt
 }
 
 model Estimate {
@@ -152,15 +158,15 @@ enum ColumnFormatType {
 }
 
 model ExportTemplate {
-  id           String         @id @default(uuid())
+  id           String     @id @default(uuid())
   name         String // 例: 「販売管理システム 売上取込用」
   exportType   ExportType
-  fileFormat   FileFormat     @default(CSV)
-  encoding     Encoding       @default(UTF8) // CSVのみ有効
-  delimiter    String         @default(",") // CSVのみ有効
-  hasHeaderRow Boolean        @default(true)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  fileFormat   FileFormat @default(CSV)
+  encoding     Encoding   @default(UTF8) // CSVのみ有効
+  delimiter    String     @default(",") // CSVのみ有効
+  hasHeaderRow Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 
   columns ExportTemplateColumn[]
   history ExportHistory[]

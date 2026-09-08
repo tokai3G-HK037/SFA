@@ -1,3 +1,6 @@
+﻿-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
 -- CreateEnum
 CREATE TYPE "ProjectStatus" AS ENUM ('ESTIMATING', 'ORDERED', 'LOST', 'COMPLETED');
 
@@ -27,11 +30,15 @@ CREATE TABLE "Project" (
     "assignee" TEXT,
     "status" "ProjectStatus" NOT NULL DEFAULT 'ESTIMATING',
     "amount" DECIMAL(14,2) NOT NULL DEFAULT 0,
-    "dueDate" DATE,
+    "expectedDeliveryDate" DATE,
     "notes" TEXT,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "endUserName" TEXT,
+    "endUserContactPerson" TEXT,
+    "endUserAddress" TEXT,
+    "endUserContact" TEXT,
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
 );
@@ -157,7 +164,7 @@ CREATE INDEX "Project_status_idx" ON "Project"("status");
 CREATE INDEX "Project_assignee_idx" ON "Project"("assignee");
 
 -- CreateIndex
-CREATE INDEX "Project_dueDate_idx" ON "Project"("dueDate");
+CREATE INDEX "Project_expectedDeliveryDate_idx" ON "Project"("expectedDeliveryDate");
 
 -- CreateIndex
 CREATE INDEX "Project_isDeleted_idx" ON "Project"("isDeleted");
@@ -203,3 +210,4 @@ ALTER TABLE "ExportTemplateColumn" ADD CONSTRAINT "ExportTemplateColumn_exportTe
 
 -- AddForeignKey
 ALTER TABLE "ExportHistory" ADD CONSTRAINT "ExportHistory_exportTemplateId_fkey" FOREIGN KEY ("exportTemplateId") REFERENCES "ExportTemplate"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+

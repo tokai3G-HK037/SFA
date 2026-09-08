@@ -21,6 +21,7 @@ export async function listProjects(query: ProjectQuery) {
           OR: [
             { customerName: { contains: query.query } },
             { projectName: { contains: query.query } },
+            { endUserName: { contains: query.query } },
           ],
         }
       : {}),
@@ -57,8 +58,12 @@ export async function createProject(input: ProjectInput) {
       assignee: input.assignee || null,
       status: input.status,
       amount: toDecimalInput(input.amount),
-      dueDate: toDateOrNull(input.dueDate),
+      expectedDeliveryDate: toDateOrNull(input.expectedDeliveryDate),
       notes: input.notes || null,
+      endUserName: input.endUserName || null,
+      endUserContactPerson: input.endUserContactPerson || null,
+      endUserAddress: input.endUserAddress || null,
+      endUserContact: input.endUserContact || null,
     },
   });
 }
@@ -72,8 +77,12 @@ export async function updateProject(id: string, input: ProjectInput) {
       assignee: input.assignee || null,
       status: input.status,
       amount: toDecimalInput(input.amount),
-      dueDate: toDateOrNull(input.dueDate),
+      expectedDeliveryDate: toDateOrNull(input.expectedDeliveryDate),
       notes: input.notes || null,
+      endUserName: input.endUserName || null,
+      endUserContactPerson: input.endUserContactPerson || null,
+      endUserAddress: input.endUserAddress || null,
+      endUserContact: input.endUserContact || null,
     },
   });
 }
@@ -139,5 +148,28 @@ export async function updatePurchaseItem(
 export async function deletePurchaseItem(projectId: string, itemId: string) {
   return prisma.purchaseItem.delete({
     where: { id: itemId, projectId },
+  });
+}
+
+/** CSVから読み込んだ仕入明細を一括登録する。既存明細の後ろに追加する。 */
+export async function bulkImportPurchaseItems(projectId: string, rows: PurchaseItemInput[]) {
+  const maxSortOrder = await prisma.purchaseItem.aggregate({
+    where: { projectId },
+    _max: { sortOrder: true },
+  });
+  let nextSortOrder = (maxSortOrder._max.sortOrder ?? -1) + 1;
+
+  return prisma.purchaseItem.createMany({
+    data: rows.map((input) => ({
+      projectId,
+      sortOrder: nextSortOrder++,
+      supplierName: input.supplierName,
+      itemName: input.itemName,
+      quantity: toDecimalInput(input.quantity),
+      unit: input.unit || null,
+      unitPrice: toDecimalInput(input.unitPrice),
+      amount: toDecimalInput(Math.round(input.quantity * input.unitPrice)),
+      notes: input.notes || null,
+    })),
   });
 }

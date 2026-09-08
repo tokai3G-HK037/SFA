@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/table";
 import { deletePurchaseItemRequest, type PurchaseItemDto } from "@/lib/api-client";
 import { PurchaseItemDialog } from "@/components/projects/purchase-item-dialog";
+import { PurchaseItemImportDialog } from "@/components/projects/purchase-item-import-dialog";
 
 export function PurchaseItemsSection({
   projectId,
@@ -34,6 +35,7 @@ export function PurchaseItemsSection({
   onChanged: () => void;
 }) {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<PurchaseItemDto | undefined>();
   const [deletingItem, setDeletingItem] = useState<PurchaseItemDto | undefined>();
 
@@ -55,15 +57,20 @@ export function PurchaseItemsSection({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">仕入明細</h2>
-        <Button
-          size="sm"
-          onClick={() => {
-            setEditingItem(undefined);
-            setDialogOpen(true);
-          }}
-        >
-          仕入明細を追加
-        </Button>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" onClick={() => setImportOpen(true)}>
+            CSVから取り込む
+          </Button>
+          <Button
+            size="sm"
+            onClick={() => {
+              setEditingItem(undefined);
+              setDialogOpen(true);
+            }}
+          >
+            仕入明細を追加
+          </Button>
+        </div>
       </div>
 
       <div className="rounded-lg border bg-background">
@@ -131,6 +138,13 @@ export function PurchaseItemsSection({
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         onSaved={onChanged}
+      />
+
+      <PurchaseItemImportDialog
+        projectId={projectId}
+        open={importOpen}
+        onOpenChange={setImportOpen}
+        onImported={onChanged}
       />
 
       <AlertDialog open={Boolean(deletingItem)} onOpenChange={(open) => !open && setDeletingItem(undefined)}>

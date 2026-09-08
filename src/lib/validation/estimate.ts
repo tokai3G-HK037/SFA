@@ -14,7 +14,8 @@ export const estimateStatusLabels: Record<(typeof estimateStatusValues)[number],
 
 export const estimateItemInputSchema = z.object({
   name: z.string().trim().min(1, "品名を入力してください").max(200),
-  quantity: z.coerce.number().min(0, "0以上を入力してください"),
+  // 値引き行を入力できるよう数量はマイナスも許容する
+  quantity: z.coerce.number(),
   unit: z.string().trim().max(30).optional().or(z.literal("")),
   unitPrice: z.coerce.number().min(0, "0以上を入力してください"),
   notes: z.string().max(500).optional().or(z.literal("")),

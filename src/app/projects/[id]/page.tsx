@@ -21,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { PurchaseItemsSection } from "@/components/projects/purchase-items-section";
 import { deleteProjectRequest, fetchProject } from "@/lib/api-client";
 import { projectStatusLabels } from "@/lib/validation/project";
+import { estimateStatusLabels } from "@/lib/validation/estimate";
 
 export default function ProjectDetailPage({
   params,
@@ -53,7 +54,9 @@ export default function ProjectDetailPage({
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-semibold">{project.projectName}</h1>
+            <h1 className="text-2xl font-semibold">
+              {project.endUserName ? `${project.endUserName} ・ ${project.projectName}` : project.projectName}
+            </h1>
             <Badge>{projectStatusLabels[project.status as keyof typeof projectStatusLabels]}</Badge>
           </div>
           <p className="text-muted-foreground">{project.customerName}</p>
@@ -85,14 +88,41 @@ export default function ProjectDetailPage({
           <p>{Number(project.amount).toLocaleString()}円</p>
         </div>
         <div>
-          <p className="text-sm text-muted-foreground">期限</p>
-          <p>{project.dueDate?.slice(0, 10) ?? "-"}</p>
+          <p className="text-sm text-muted-foreground">予定納期</p>
+          <p>{project.expectedDeliveryDate?.slice(0, 10) ?? "-"}</p>
         </div>
         <div>
           <p className="text-sm text-muted-foreground">備考</p>
           <p className="whitespace-pre-wrap">{project.notes ?? "-"}</p>
         </div>
       </div>
+
+      {(project.endUserName ||
+        project.endUserContactPerson ||
+        project.endUserAddress ||
+        project.endUserContact) && (
+        <div className="space-y-2">
+          <h2 className="text-lg font-semibold">エンドユーザー情報</h2>
+          <div className="grid grid-cols-2 gap-4 rounded-lg border bg-background p-4 md:grid-cols-4">
+            <div>
+              <p className="text-sm text-muted-foreground">名称</p>
+              <p>{project.endUserName ?? "-"}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">担当者</p>
+              <p>{project.endUserContactPerson ?? "-"}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">住所</p>
+              <p>{project.endUserAddress ?? "-"}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">連絡先</p>
+              <p>{project.endUserContact ?? "-"}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Separator />
 
@@ -112,7 +142,10 @@ export default function ProjectDetailPage({
           <ul className="divide-y rounded-lg border bg-background">
             {project.estimates.map((estimate) => (
               <li key={estimate.id} className="flex items-center justify-between p-3">
-                <Link href={`/estimates/${estimate.id}`} className="hover:underline">
+                <Link href={`/estimates/${estimate.id}`} className="flex items-center gap-2 hover:underline">
+                  <Badge variant={estimate.status === "FINALIZED" ? "default" : "secondary"}>
+                    {estimateStatusLabels[estimate.status]}
+                  </Badge>
                   {estimate.estimateNumber} - {estimate.title}
                 </Link>
                 <span>{Number(estimate.totalAmount).toLocaleString()}円</span>
