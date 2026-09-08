@@ -2,7 +2,13 @@ import type { ProjectInput, PurchaseItemInput } from "@/lib/validation/project";
 import type { EstimateInput } from "@/lib/validation/estimate";
 import type { CompanyProfileInput } from "@/lib/validation/company-profile";
 
-export type ProjectStatus = "ESTIMATING" | "ORDERED" | "LOST" | "COMPLETED";
+export type ProjectStatus =
+  | "ESTIMATING"
+  | "NEGOTIATING"
+  | "APPROVAL"
+  | "ORDERED"
+  | "LOST"
+  | "COMPLETED";
 
 export type ProjectDto = {
   id: string;

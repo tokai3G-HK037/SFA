@@ -13,7 +13,9 @@ datasource db {
 // ── 案件管理 ─────────────────────────────
 
 enum ProjectStatus {
-  ESTIMATING // 見積中
+  ESTIMATING // 見積
+  NEGOTIATING // 商談
+  APPROVAL // 稟議
   ORDERED // 受注
   LOST // 失注
   COMPLETED // 完了

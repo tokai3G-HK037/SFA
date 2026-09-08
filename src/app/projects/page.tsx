@@ -25,7 +25,9 @@ import { fetchProjects } from "@/lib/api-client";
 import { projectStatusLabels, projectStatusValues } from "@/lib/validation/project";
 
 const statusBadgeVariant: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-  ESTIMATING: "secondary",
+  ESTIMATING: "outline",
+  NEGOTIATING: "secondary",
+  APPROVAL: "secondary",
   ORDERED: "default",
   LOST: "destructive",
   COMPLETED: "outline",

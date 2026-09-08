@@ -1,4 +1,4 @@
-﻿-- CreateSchema
+-- CreateSchema
 CREATE SCHEMA IF NOT EXISTS "public";
 
 -- CreateEnum
@@ -210,4 +210,3 @@ ALTER TABLE "ExportTemplateColumn" ADD CONSTRAINT "ExportTemplateColumn_exportTe
 
 -- AddForeignKey
 ALTER TABLE "ExportHistory" ADD CONSTRAINT "ExportHistory_exportTemplateId_fkey" FOREIGN KEY ("exportTemplateId") REFERENCES "ExportTemplate"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-

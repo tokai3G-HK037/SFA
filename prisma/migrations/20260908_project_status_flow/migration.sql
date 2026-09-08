@@ -1,0 +1,3 @@
+-- AlterEnum
+ALTER TYPE "ProjectStatus" ADD VALUE 'NEGOTIATING';
+ALTER TYPE "ProjectStatus" ADD VALUE 'APPROVAL';

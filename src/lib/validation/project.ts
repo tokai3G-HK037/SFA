@@ -2,13 +2,17 @@ import { z } from "zod";
 
 export const projectStatusValues = [
   "ESTIMATING",
+  "NEGOTIATING",
+  "APPROVAL",
   "ORDERED",
   "LOST",
   "COMPLETED",
 ] as const;
 
 export const projectStatusLabels: Record<(typeof projectStatusValues)[number], string> = {
-  ESTIMATING: "見積中",
+  ESTIMATING: "見積",
+  NEGOTIATING: "商談",
+  APPROVAL: "稟議",
   ORDERED: "受注",
   LOST: "失注",
   COMPLETED: "完了",
