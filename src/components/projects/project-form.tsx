@@ -103,7 +103,9 @@ export function ProjectForm({ project }: { project?: ProjectDto }) {
                 onValueChange={(value) => value && field.onChange(value)}
               >
                 <SelectTrigger id="status" className="w-full">
-                  <SelectValue />
+                  <SelectValue>
+                    {(value: (typeof projectStatusValues)[number]) => projectStatusLabels[value]}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {projectStatusValues.map((value) => (

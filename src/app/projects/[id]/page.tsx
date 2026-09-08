@@ -59,13 +59,19 @@ export default function ProjectDetailPage({
           <p className="text-muted-foreground">{project.customerName}</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" render={<Link href={`/projects/${id}/edit`} />}>
+          <Button
+            variant="outline"
+            render={<Link href={`/projects/${id}/edit`} />}
+            nativeButton={false}
+          >
             編集
           </Button>
           <Button variant="outline" onClick={() => setDeleteOpen(true)}>
             削除
           </Button>
-          <Button render={<Link href="/estimates" />}>見積書を作成</Button>
+          <Button render={<Link href="/estimates" />} nativeButton={false}>
+            見積書を作成
+          </Button>
         </div>
       </div>
 

@@ -48,7 +48,9 @@ export default function ProjectsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">案件管理</h1>
-        <Button render={<Link href="/projects/new" />}>新規案件を登録</Button>
+        <Button render={<Link href="/projects/new" />} nativeButton={false}>
+          新規案件を登録
+        </Button>
       </div>
 
       <div className="flex flex-wrap gap-3">
@@ -59,8 +61,14 @@ export default function ProjectsPage() {
           className="max-w-xs"
         />
         <Select value={status} onValueChange={(value) => value && setStatus(value)}>
-          <SelectTrigger className="w-40">
-            <SelectValue />
+          <SelectTrigger className="w-44">
+            <SelectValue>
+              {(value: string) =>
+                value === "ALL"
+                  ? "すべてのステータス"
+                  : projectStatusLabels[value as keyof typeof projectStatusLabels]
+              }
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="ALL">すべてのステータス</SelectItem>
