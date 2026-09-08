@@ -69,7 +69,7 @@ export default function ProjectDetailPage({
           <Button variant="outline" onClick={() => setDeleteOpen(true)}>
             削除
           </Button>
-          <Button render={<Link href="/estimates" />} nativeButton={false}>
+          <Button render={<Link href={`/estimates/new?projectId=${id}`} />} nativeButton={false}>
             見積書を作成
           </Button>
         </div>
