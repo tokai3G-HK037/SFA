@@ -18,7 +18,7 @@ require __DIR__ . '/../includes/layout_header.php';
 <div class="page-header">
   <h1>見積書</h1>
   <div class="actions">
-    <a href="/estimates/new.php" class="btn">新規見積書を作成</a>
+    <a href="<?= BASE_PATH ?>/estimates/new.php" class="btn">新規見積書を作成</a>
   </div>
 </div>
 
@@ -35,7 +35,7 @@ require __DIR__ . '/../includes/layout_header.php';
     <?php endif; ?>
     <?php foreach ($estimates as $e): ?>
       <tr>
-        <td><a href="/estimates/view.php?id=<?= h($e['id']) ?>"><?= h($e['estimate_number']) ?></a></td>
+        <td><a href="<?= BASE_PATH ?>/estimates/view.php?id=<?= h($e['id']) ?>"><?= h($e['estimate_number']) ?></a></td>
         <td><?= h($e['customer_name']) ?> / <?= h($e['project_name']) ?></td>
         <td><?= h($e['title']) ?></td>
         <td><?= format_date($e['issue_date']) ?></td>

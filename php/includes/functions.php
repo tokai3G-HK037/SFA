@@ -14,11 +14,20 @@ function h($value): string
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }
 
-/** リダイレクトして終了 */
+/** リダイレクトして終了。$urlが"/"始まりのアプリ内パスの場合はBASE_PATHを自動付与する */
 function redirect(string $url): void
 {
+    if (isset($url[0]) && $url[0] === '/') {
+        $url = BASE_PATH . $url;
+    }
     header('Location: ' . $url);
     exit;
+}
+
+/** アプリ内の"/"始まりパスにBASE_PATHを付与する(テンプレート内のリンク生成用) */
+function url(string $path): string
+{
+    return BASE_PATH . $path;
 }
 
 /** UUID v4 を生成する(PrismaのUUID主キーと同じ形式) */

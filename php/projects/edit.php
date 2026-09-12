@@ -51,7 +51,7 @@ require __DIR__ . '/../includes/layout_header.php';
   <?php require __DIR__ . '/_form_fields.php'; ?>
   <div class="actions">
     <button type="submit" class="btn">更新する</button>
-    <a href="/projects/view.php?id=<?= h($id) ?>" class="btn btn-outline">キャンセル</a>
+    <a href="<?= BASE_PATH ?>/projects/view.php?id=<?= h($id) ?>" class="btn btn-outline">キャンセル</a>
   </div>
 </form>
 

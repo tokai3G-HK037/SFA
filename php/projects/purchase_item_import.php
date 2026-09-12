@@ -107,7 +107,7 @@ require __DIR__ . '/../includes/layout_header.php';
     </div>
     <div class="actions">
       <button type="submit" class="btn">取り込む</button>
-      <a href="/projects/view.php?id=<?= h($projectId) ?>" class="btn btn-outline">キャンセル</a>
+      <a href="<?= BASE_PATH ?>/projects/view.php?id=<?= h($projectId) ?>" class="btn btn-outline">キャンセル</a>
     </div>
   </form>
 </div>

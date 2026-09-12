@@ -47,4 +47,6 @@ next-env.d.ts
 
 # PHP版(WebARENA SuiteX向け)の実接続情報。config.php.exampleのみコミットする
 /php/config.php
+/php/config.php.*
+!/php/config.php.example
 

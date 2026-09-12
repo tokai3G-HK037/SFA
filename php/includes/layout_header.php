@@ -10,17 +10,17 @@ $flashes = get_flashes();
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= h($pageTitle) ?> - SFM</title>
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="<?= BASE_PATH ?>/assets/style.css">
 </head>
 <body>
 <header class="site-header">
   <div class="site-header-inner">
     <span class="logo">SFM</span>
     <nav>
-      <a href="/projects/index.php" class="<?= $activeNav === 'projects' ? 'active' : '' ?>">案件管理</a>
-      <a href="/estimates/index.php" class="<?= $activeNav === 'estimates' ? 'active' : '' ?>">見積書</a>
-      <a href="/exports/index.php" class="<?= $activeNav === 'exports' ? 'active' : '' ?>">データ出力</a>
-      <a href="/settings/company.php" class="<?= $activeNav === 'settings' ? 'active' : '' ?>">自社情報</a>
+      <a href="<?= BASE_PATH ?>/projects/index.php" class="<?= $activeNav === 'projects' ? 'active' : '' ?>">案件管理</a>
+      <a href="<?= BASE_PATH ?>/estimates/index.php" class="<?= $activeNav === 'estimates' ? 'active' : '' ?>">見積書</a>
+      <a href="<?= BASE_PATH ?>/exports/index.php" class="<?= $activeNav === 'exports' ? 'active' : '' ?>">データ出力</a>
+      <a href="<?= BASE_PATH ?>/settings/company.php" class="<?= $activeNav === 'settings' ? 'active' : '' ?>">自社情報</a>
     </nav>
   </div>
 </header>

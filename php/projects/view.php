@@ -41,13 +41,13 @@ require __DIR__ . '/../includes/layout_header.php';
     <p class="muted"><?= h($project['customer_name']) ?></p>
   </div>
   <div class="actions">
-    <a href="/projects/edit.php?id=<?= h($id) ?>" class="btn btn-outline">編集</a>
-    <form method="post" action="/projects/delete.php" onsubmit="return confirm('案件を削除しますか?この操作は取り消せません。');" style="display:inline;">
+    <a href="<?= BASE_PATH ?>/projects/edit.php?id=<?= h($id) ?>" class="btn btn-outline">編集</a>
+    <form method="post" action="<?= BASE_PATH ?>/projects/delete.php" onsubmit="return confirm('案件を削除しますか?この操作は取り消せません。');" style="display:inline;">
       <?= csrf_field() ?>
       <input type="hidden" name="id" value="<?= h($id) ?>">
       <button type="submit" class="btn btn-outline">削除</button>
     </form>
-    <a href="/estimates/new.php?project_id=<?= h($id) ?>" class="btn">見積書を作成</a>
+    <a href="<?= BASE_PATH ?>/estimates/new.php?project_id=<?= h($id) ?>" class="btn">見積書を作成</a>
   </div>
 </div>
 
@@ -77,8 +77,8 @@ require __DIR__ . '/../includes/layout_header.php';
 <div class="section-header">
   <h2>仕入明細</h2>
   <div class="actions">
-    <a href="/projects/purchase_item_import.php?project_id=<?= h($id) ?>" class="btn btn-outline btn-sm">CSVから取り込む</a>
-    <a href="/projects/purchase_item_new.php?project_id=<?= h($id) ?>" class="btn btn-sm">仕入明細を追加</a>
+    <a href="<?= BASE_PATH ?>/projects/purchase_item_import.php?project_id=<?= h($id) ?>" class="btn btn-outline btn-sm">CSVから取り込む</a>
+    <a href="<?= BASE_PATH ?>/projects/purchase_item_new.php?project_id=<?= h($id) ?>" class="btn btn-sm">仕入明細を追加</a>
   </div>
 </div>
 <div class="table-wrap">
@@ -101,8 +101,8 @@ require __DIR__ . '/../includes/layout_header.php';
         <td class="num"><?= format_yen($pi['unit_price']) ?></td>
         <td class="num"><?= format_yen($pi['amount']) ?></td>
         <td>
-          <a href="/projects/purchase_item_edit.php?id=<?= h($pi['id']) ?>" class="btn btn-ghost btn-sm">編集</a>
-          <form method="post" action="/projects/purchase_item_delete.php" onsubmit="return confirm('この仕入明細を削除しますか?');" style="display:inline;">
+          <a href="<?= BASE_PATH ?>/projects/purchase_item_edit.php?id=<?= h($pi['id']) ?>" class="btn btn-ghost btn-sm">編集</a>
+          <form method="post" action="<?= BASE_PATH ?>/projects/purchase_item_delete.php" onsubmit="return confirm('この仕入明細を削除しますか?');" style="display:inline;">
             <?= csrf_field() ?>
             <input type="hidden" name="id" value="<?= h($pi['id']) ?>">
             <input type="hidden" name="project_id" value="<?= h($id) ?>">
@@ -125,7 +125,7 @@ require __DIR__ . '/../includes/layout_header.php';
   <div class="table-wrap">
     <?php foreach ($estimates as $est): ?>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid #eee;">
-        <a href="/estimates/view.php?id=<?= h($est['id']) ?>" style="display:flex;align-items:center;gap:8px;">
+        <a href="<?= BASE_PATH ?>/estimates/view.php?id=<?= h($est['id']) ?>" style="display:flex;align-items:center;gap:8px;">
           <span class="badge <?= $est['status'] === 'FINALIZED' ? 'badge-default' : 'badge-secondary' ?>"><?= h(estimate_status_label($est['status'])) ?></span>
           <?= h($est['estimate_number']) ?> - <?= h($est['title']) ?>
         </a>

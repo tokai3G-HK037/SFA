@@ -186,10 +186,10 @@ require __DIR__ . '/../includes/layout_header.php';
 
   <div class="actions">
     <button type="submit" class="btn">作成する</button>
-    <a href="/estimates/index.php" class="btn btn-outline">キャンセル</a>
+    <a href="<?= BASE_PATH ?>/estimates/index.php" class="btn btn-outline">キャンセル</a>
   </div>
 </form>
 
-<script src="/assets/app.js"></script>
+<script src="<?= BASE_PATH ?>/assets/app.js"></script>
 
 <?php require __DIR__ . '/../includes/layout_footer.php'; ?>

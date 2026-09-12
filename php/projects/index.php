@@ -32,7 +32,7 @@ require __DIR__ . '/../includes/layout_header.php';
 <div class="page-header">
   <h1>案件管理</h1>
   <div class="actions">
-    <a href="/projects/new.php" class="btn">新規案件を登録</a>
+    <a href="<?= BASE_PATH ?>/projects/new.php" class="btn">新規案件を登録</a>
   </div>
 </div>
 
@@ -65,9 +65,9 @@ require __DIR__ . '/../includes/layout_header.php';
     <?php endif; ?>
     <?php foreach ($projects as $p): ?>
       <tr>
-        <td><a href="/projects/view.php?id=<?= h($p['id']) ?>"><?= h($p['customer_name']) ?></a></td>
+        <td><a href="<?= BASE_PATH ?>/projects/view.php?id=<?= h($p['id']) ?>"><?= h($p['customer_name']) ?></a></td>
         <td>
-          <a href="/projects/view.php?id=<?= h($p['id']) ?>">
+          <a href="<?= BASE_PATH ?>/projects/view.php?id=<?= h($p['id']) ?>">
             <?php if (!empty($p['end_user_name'])): ?>
               <span class="muted" style="display:block;font-size:12px;"><?= h($p['end_user_name']) ?></span>
             <?php endif; ?>
