@@ -1,0 +1,11 @@
+<?php
+// 本番環境用の設定テンプレート。
+// このファイルを config.php としてコピーし、実際の接続情報を設定してください。
+// config.php は .gitignore 対象なので、実際の値をリポジトリにコミットしないでください。
+
+// WebARENA 管理画面で「標準データベース」を有効化すると発行される接続情報を設定します。
+define('DB_HOST', 'localhost');       // WebARENAの管理画面に表示されるホスト名
+define('DB_NAME', 'your_database_name');
+define('DB_USER', 'your_database_user');
+define('DB_PASS', 'your_database_password');
+define('DB_CHARSET', 'utf8mb4');

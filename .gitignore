@@ -45,3 +45,6 @@ next-env.d.ts
 # local logs
 *.log
 
+# PHP版(WebARENA SuiteX向け)の実接続情報。config.php.exampleのみコミットする
+/php/config.php
+
