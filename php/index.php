@@ -1,4 +1,4 @@
 <?php
 require_once __DIR__ . '/config.php';
-header('Location: ' . BASE_PATH . '/projects/index.php');
+header('Location: /sfm/projects/index.php');
 exit;
